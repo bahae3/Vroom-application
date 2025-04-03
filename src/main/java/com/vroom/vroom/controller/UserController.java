@@ -25,6 +25,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    // Create account for Passager
     @PostMapping("/addPassager")
     public String addPassager(
             @RequestParam("firstName") String firstName,
@@ -36,6 +37,7 @@ public class UserController {
 
         // Hashing the password for more security
         String hashedPassword = passwordEncoder.encode(motDePasse);
+        // Storing a photo using a photo type
         byte[] photoBytes = photo.getBytes();
 
         User user = new User(null, firstName, lastName, email, hashedPassword, photoBytes, numDeTele, "passager", 0);
@@ -43,6 +45,7 @@ public class UserController {
         return success ? "Passager created successfully" : "Error creating passager";
     }
 
+    // Create account for Conducteur
     @PostMapping("/addConducteur")
     public String addConducteur(
             @RequestParam("firstName") String firstName,
@@ -54,13 +57,27 @@ public class UserController {
 
         // Hashing the password for more security
         String hashedPassword = passwordEncoder.encode(motDePasse);
+        // Storing a photo using a photo type
         byte[] photoBytes = photo.getBytes();
 
         User user = new User(null, firstName, lastName, email, hashedPassword, photoBytes, numDeTele, "conducteur", 0);
         boolean success = userService.createUser(user);
-        return success ? "Passager created successfully" : "Error creating conducteur";
+        return success ? "Conducteur created successfully" : "Error creating conducteur";
     }
 
+    // Login endpoint
+    @PostMapping("/login")
+    public String loginUser(
+            @RequestParam("email") String email,
+            @RequestParam("motDePasse") String motDePasse) {
+        User user = userService.loginUser(email, motDePasse);
+        if (user != null) {
+            return "Login successful for user: " + user.getEmail();
+        }
+        return "Invalid email or password";
+    }
+
+    // To delete a user by an admin
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Long id) {
         boolean success = userService.deleteUser(id);
