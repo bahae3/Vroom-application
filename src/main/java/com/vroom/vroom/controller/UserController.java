@@ -83,4 +83,25 @@ public class UserController {
         boolean success = userService.deleteUser(id);
         return success ? "User deleted successfully" : "Error deleting user";
     }
+    // update information for user
+    @PutMapping("/update")
+    public String updateUser(
+            @RequestParam("idUser") Long idUser,
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("email") String email,
+            @RequestParam("motDePasse") String motDePasse,
+            @RequestParam("numDeTele") String numDeTele,
+            @RequestParam("roleUser") String roleUser,
+            @RequestParam("photo") MultipartFile photo
+    )
+
+    throws IOException {
+        String hashedPassword = passwordEncoder.encode(motDePasse);
+        byte[] photoBytes = photo.getBytes();
+
+        User updateuser =new User(idUser,firstName,lastName,email,hashedPassword, photoBytes, numDeTele, roleUser, 0);
+        boolean success = userService.updateUser(updateuser);
+        return success ? "User updated successfully" : "Error updating user";
+    }
 }

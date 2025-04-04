@@ -35,4 +35,9 @@ public class UserService {
     public boolean deleteUser(Long idUser) {
         return userRepository.deleteUser(idUser) > 0;
     }
+
+    //update service
+    public boolean updateUser(User user) {
+        return userRepository.updateUser(user) > 0;
+    }
 }

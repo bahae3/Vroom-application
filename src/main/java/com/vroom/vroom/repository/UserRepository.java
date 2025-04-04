@@ -1,6 +1,7 @@
 package com.vroom.vroom.repository;
 
 import com.vroom.vroom.model.User;
+import com.vroom.vroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,6 +27,8 @@ public class UserRepository {
             rs.getString("roleUser"),
             rs.getInt("isAdmin")
     );
+    //@Autowired
+    //private UserService userService;
 
     public List<User> getAllUsers() {
         String sql = "SELECT * FROM utilisateur";
@@ -54,4 +57,22 @@ public class UserRepository {
         String sql = "DELETE FROM utilisateur WHERE idUser = ?";
         return jdbcTemplate.update(sql, idUser);
     }
+    //update
+    public int updateUser(User user) {
+        String sql ="UPDATE utilisateur set firstName=?,lastName=?,email=?,motDePasse=?,photo=?,numDeTele=?,roleUser=? WHERE idUser = ? ";
+        return jdbcTemplate.update(
+                sql,
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getMotDePasse(),
+                user.getPhoto(),
+                user.getNumDeTele(),
+                user.getRoleUser(),
+                user.getIdUser()
+
+        );
+    }
+
+
 }
