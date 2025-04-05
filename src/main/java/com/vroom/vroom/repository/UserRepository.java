@@ -58,7 +58,7 @@ public class UserRepository {
         try {
             return jdbcTemplate.queryForObject(sql, userRowMapper, idUser);
         } catch (EmptyResultDataAccessException ex) {
-            // No user found with the given email
+            // No user found with the given id
             return null;
         }
     }
