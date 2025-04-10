@@ -21,9 +21,9 @@ public class TrajetsController {
 
 
     // partie controller pour ajouter trajet par conducteur seulement
-    @PostMapping("/AddTrajet")
+    @PostMapping("/addTrajet")
     public String addTrajet( @RequestBody Trajets trajets) {
-       User user = userService.findUserById((long) trajets.getIdConducteur());
+       User user = userService.findUserById(trajets.getIdConducteur());
 
        if(user == null) {
            return "conducteur non trouvé";
