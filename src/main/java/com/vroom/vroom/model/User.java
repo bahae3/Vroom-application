@@ -1,7 +1,5 @@
 package com.vroom.vroom.model;
 
-import java.util.Date;
-
 public class User {
     private Long idUser;
     private String firstName;
