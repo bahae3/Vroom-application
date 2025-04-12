@@ -44,12 +44,14 @@ CREATE TABLE IF NOT EXISTS historiqueTrajet(
     ON UPDATE CASCADE
 );
 
--- Table evaluations_de_conducteur:
--- pour evaluer un conducteur par un passager
-CREATE TABLE IF NOT EXISTS evaluations_de_conducteur (
+-- Table evaluations:
+CREATE TABLE IF NOT EXISTS evaluations (
     idEvC INT AUTO_INCREMENT PRIMARY KEY,
     idAuteur INT NOT NULL,
     idUtilisateurEvalue INT NOT NULL,
+    -- Si conducteur evalue passager: 0
+    -- Si passager evalue conducteur: 1
+    typeEvaluation TINYINY NOT NULL,
     avis INT DEFAULT 0, -- Avis exemple (1-5): 1/5, 4/5, 5/5 ... 
     commentaire TEXT,
     dateEvaluation DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -60,25 +62,6 @@ CREATE TABLE IF NOT EXISTS evaluations_de_conducteur (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
-
--- Table evaluations_de_passager:
--- pour evaluer un passager par un conducteur
-CREATE TABLE IF NOT EXISTS evaluations_de_passager (
-    idEvC INT AUTO_INCREMENT PRIMARY KEY,
-    idAuteur INT NOT NULL,
-    idUtilisateurEvalue INT NOT NULL,
-    avis INT DEFAULT 0, -- Avis exemple (1-5): 1/5, 4/5, 5/5 ... 
-    commentaire TEXT,
-    dateEvaluation DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (idAuteur) REFERENCES utilisateur(idUser)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    FOREIGN KEY (idUtilisateurEvalue) REFERENCES utilisateur(idUser)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-);
-
--- had 2 dernieres tables d evaluations ban lia n3awdhom ghir for a better readability
 
 -- Table wallet:
 CREATE TABLE IF NOT EXISTS wallet (
@@ -100,6 +83,19 @@ CREATE TABLE IF NOT EXISTS transactions (
     montant DECIMAL(5,2) NOT NULL,
     dateTransaction DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idWallet) REFERENCES wallet(idWallet)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+-- Table chat:
+CREATE TABLE IF NOT EXISTS chat (
+    idChat INT AUTO_INCREMENT PRIMARY KEY,
+    idExpediteur INT NOT NULL,
+    idDestinataire INT NOT NULL,
+    FOREIGN KEY (idExpediteur) REFERENCES utilisateur(idUser)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    FOREIGN KEY (idDestinataire) REFERENCES utilisateur(idUser)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
