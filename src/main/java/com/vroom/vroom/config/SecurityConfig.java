@@ -19,7 +19,7 @@ public class SecurityConfig {
                 // Configure endpoint authorization.
                 .authorizeHttpRequests(auth -> auth
                         // Allow public access to all requests that start with /api/users/
-                        .requestMatchers("/api/trajet/**","/api/trajet/getAllTrajet").permitAll()
+                        .requestMatchers("/api/wallet/**").permitAll()
                         // Require authentication for all other requests.
                         .anyRequest().authenticated())
                 // Enable HTTP Basic authentication
