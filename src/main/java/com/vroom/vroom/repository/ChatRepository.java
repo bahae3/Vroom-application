@@ -1,13 +1,14 @@
 package com.vroom.vroom.repository;
 
 import com.vroom.vroom.model.Chat;
-import com.vroom.vroom.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class ChatRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
