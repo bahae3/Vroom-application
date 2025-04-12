@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.util.List;
 
 @Repository
 public class MessageRepository {
@@ -42,5 +43,10 @@ public class MessageRepository {
     public int deleteMessage(long idMessage) {
         String sql = "DELETE FROM messages WHERE idMessage = ?";
         return jdbcTemplate.update(sql, idMessage);
+    }
+
+    public List<Message> findAllMessages() {
+        String sql = "SELECT * FROM messages";
+        return jdbcTemplate.query(sql, messageRowMapper);
     }
 }

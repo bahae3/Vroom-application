@@ -1,8 +1,11 @@
 package com.vroom.vroom.service;
 
+import com.vroom.vroom.model.Message;
 import com.vroom.vroom.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MessageService {
@@ -23,4 +26,9 @@ public class MessageService {
     public int deleteMessage(long idMessage) {
         return messageRepository.deleteMessage(idMessage);
     }
+
+    public List<Message> getAllMessages() {
+        return messageRepository.findAllMessages();
+    }
+
 }

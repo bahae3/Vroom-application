@@ -39,4 +39,10 @@ public class NotificationRepository {
         String sql = "DELETE FROM notifications WHERE idNotification = ?";
         return jdbcTemplate.update(sql, idNotification);
     }
+
+    public boolean sendNotification(Notification notification) {
+        String sql = "INSERT INTO notifications (idUser, titre, message) VALUES (?, ?, ?)";
+        int rows = jdbcTemplate.update(sql, notification.getIdUser(), notification.getTitre(), notification.getMessage());
+        return rows > 0;
+    }
 }

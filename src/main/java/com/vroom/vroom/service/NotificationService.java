@@ -27,4 +27,12 @@ public class NotificationService {
     public int deleteNotification(long idNotification) {
         return notificationRepository.deleteNotification(idNotification);
     }
+
+    public boolean sendNotification(Long idUser, String titre, String message) {
+        Notification notif = new Notification();
+        notif.setIdUser(idUser.intValue());
+        notif.setTitre(titre);
+        notif.setMessage(message);
+        return notificationRepository.sendNotification(notif);
+    }
 }
