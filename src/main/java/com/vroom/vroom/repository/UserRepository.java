@@ -16,7 +16,7 @@ public class UserRepository {
     private JdbcTemplate jdbcTemplate;
 
     private final RowMapper<User> userRowMapper = (rs, rowNum) -> new User(
-            rs.getLong("idUser"),
+            rs.getInt("idUser"),
             rs.getString("firstName"),
             rs.getString("lastName"),
             rs.getString("email"),

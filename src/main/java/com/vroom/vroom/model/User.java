@@ -1,7 +1,7 @@
 package com.vroom.vroom.model;
 
 public class User {
-    private Long idUser;
+    private int idUser;
     private String firstName;
     private String lastName;
     private String email;
@@ -14,7 +14,7 @@ public class User {
     public User() {
     }
 
-    public User(Long idUser, String firstName, String lastName, String email, String motDePasse,
+    public User(Integer idUser, String firstName, String lastName, String email, String motDePasse,
                 byte[] photo, String numDeTele, String roleUser, int isAdmin) {
         this.idUser = idUser;
         this.firstName = firstName;
@@ -27,11 +27,11 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    public Long getIdUser() {
+    public int getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(Long idUser) {
+    public void setIdUser(int idUser) {
         this.idUser = idUser;
     }
 
