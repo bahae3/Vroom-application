@@ -35,7 +35,7 @@ public class ConducteurController {
     }
 
     //modifier un trajet
-    @PostMapping("/trajet")
+    @PostMapping("/trajet/update")
     public ResponseEntity<?> updateTrajet(@RequestBody Trajets trajet, Authentication authentication) {
         if (!isConducteur(authentication)) { return ResponseEntity.status(403).body("Acces denied"); }
         User conducteur = userService.findUserByEmail(authentication.getName());
