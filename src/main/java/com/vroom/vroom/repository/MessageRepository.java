@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public class MessageRepository {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -49,4 +50,16 @@ public class MessageRepository {
         String sql = "SELECT * FROM messages";
         return jdbcTemplate.query(sql, messageRowMapper);
     }
+    //pour recuperer les messages par un destinataire
+    public List<Message> findMessagesByDestinataire(long idDestinataire) {
+        String sql = "SELECT * FROM messages WHERE idDestinataire = ?";
+        return jdbcTemplate.query(sql, messageRowMapper, idDestinataire);
+    }
+
+    //recuperer un message par son id
+    public Message findMessageById(long idMessage) {
+        String sql = "SELECT * FROM messages WHERE idMessage = ?";
+        return jdbcTemplate.queryForObject(sql, messageRowMapper, idMessage);
+    }
+
 }

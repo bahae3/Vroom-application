@@ -31,4 +31,15 @@ public class MessageService {
         return messageRepository.findAllMessages();
     }
 
+    //service pour recuperer les messages par un destinataire
+    public List<Message> findMessagesByDestinataire(long idDestinataire) {
+        return messageRepository.findMessagesByDestinataire(idDestinataire);
+    }
+
+    //service pour recuperer un message par son id
+    public Message findMessageById(long idMessage) {
+        return messageRepository.findMessageById(idMessage);
+    }
+
+
 }
