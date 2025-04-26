@@ -13,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000") // Authorize React.js, to help in frontend dev using api
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

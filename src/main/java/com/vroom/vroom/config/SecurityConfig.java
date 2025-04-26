@@ -6,29 +6,42 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.List;
+
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Disable CSRF for development and testing (like my case in postman testing)
-                .csrf(csrf -> csrf.disable())
-                // Configure endpoint authorization.
-                .authorizeHttpRequests(auth -> auth
-                        // Allow public access to all requests that start with /api/users/
-                        .requestMatchers("/api/wallet/**").permitAll()
-                        // Require authentication for all other requests.
-                        .anyRequest().authenticated())
-                // Enable HTTP Basic authentication
-                .httpBasic(withDefaults());
+                .cors().and()
+                .csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers(antMatcher("/api/**")).permitAll()
+                .anyRequest().authenticated();
 
         return http.build();
     }
 
-    // This is used for hashing passwords
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
