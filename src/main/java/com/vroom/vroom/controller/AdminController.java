@@ -60,7 +60,7 @@ public class AdminController {
 
    // ✅ Supprimer un trajet
     @DeleteMapping("/trajets/{id}")
-    public ResponseEntity<?> deleteTrajet(@PathVariable int idTrajet, int idConducteur, Authentication authentication) {
+    public ResponseEntity<?> deleteTrajet(@PathVariable int idTrajet, Long idConducteur, Authentication authentication) {
         if (!isAdmin(authentication)) return ResponseEntity.status(403).body("Access denied");
         return trajetService.DeleteTrajet(idTrajet, idConducteur) ?
                 ResponseEntity.ok("Trajet deleted") :

@@ -35,12 +35,12 @@ public class TrajetsService {
     }
 
     //delete trajet service
-    public boolean DeleteTrajet(int idTrajet, int idConducteur) {
+    public boolean DeleteTrajet(int idTrajet, Long idConducteur) {
         return  trajetsRepository.DeleteTrajet(idTrajet , idConducteur) >0;
     }
 
     // implementation pour la reservation d'un trajet par un conducteur
-    public boolean reserverTrajet(int idUser, int idTrajet) {
+    public boolean reserverTrajet(Long idUser, int idTrajet) {
         // 1. Check if trajet exists and if places are available
         String checkSql = "SELECT placesDisponibles FROM trajet WHERE idTrajet = ?";
         Integer places = jdbcTemplate.queryForObject(checkSql, Integer.class, idTrajet);

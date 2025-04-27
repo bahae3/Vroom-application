@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class Trajets {
     private int idTrajet;
-    private int idConducteur;
+    private Long idConducteur;
     private String pointDepart;
     private String pointArrivee;
     private LocalDateTime heureDepart;
@@ -18,7 +18,7 @@ public class Trajets {
         return idTrajet;
     }
 
-    public int getIdConducteur() {
+    public Long getIdConducteur() {
         return idConducteur;
     }
 
@@ -50,7 +50,7 @@ public class Trajets {
         this.idTrajet = idTrajet;
     }
 
-    public void setIdConducteur(int idConducteur) {
+    public void setIdConducteur(Long idConducteur) {
         this.idConducteur = idConducteur;
     }
 

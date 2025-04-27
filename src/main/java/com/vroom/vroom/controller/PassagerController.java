@@ -51,7 +51,7 @@ public class PassagerController {
     public ResponseEntity<?> reserveTrajet(@RequestParam int trajetId, Authentication authentication) {
         if( !isPassager(authentication) ) { return ResponseEntity.status(403).body("Acces denied"); }
         User passager= userService.findUserByEmail(authentication.getName());
-        boolean succes = trajetsService.reserverTrajet(trajetId, passager.getIdUser());
+        boolean succes = trajetsService.reserverTrajet(passager.getIdUser(), trajetId);
         return succes ? ResponseEntity.ok("le trajet est confirmé") : ResponseEntity.status(400).body("erreur lors de la reservation");
     }
 
