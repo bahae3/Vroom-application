@@ -27,7 +27,7 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    public Long getIdUser() {
+    public int getIdUser() {
         return idUser;
     }
 
