@@ -16,6 +16,19 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     dateCreation DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Table vehicule
+CREATE TABLE IF NOT EXISTS vehicule (
+    idVehicule INT AUTO_INCREMENT PRIMARY KEY,
+    idConducteur INT NOT NULL,
+    marque VARCHAR(80) NOT NULL,
+    typeVehicule VARCHAR(80) NOT NULL DEFAULT 'normal',
+    matricule VARCHAR(80) NOT NULL,
+    couleur VARCHAR(80) NOT NULL,
+    FOREIGN KEY (idConducteur) REFERENCES utilisateur(idUser) -- Cle etrangere ds la table utilisateur
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
 -- Table trajet:
 CREATE TABLE IF NOT EXISTS trajet (
     idTrajet INT AUTO_INCREMENT PRIMARY KEY,
