@@ -18,7 +18,7 @@ public class VehiculeService {
     private JdbcTemplate jdbcTemplate;
 
     //service pour voir vehicule par conducteur
-    public List<Vehicule> getVehiculesByConducteur(int idConducteur) {
+    public List<Vehicule> getVehiculesByConducteur(Long idConducteur) {
         return vehiculeRepository.getVehiculesByConducteur(idConducteur);
     }
 

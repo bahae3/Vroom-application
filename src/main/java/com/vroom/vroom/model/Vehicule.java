@@ -3,7 +3,7 @@ package com.vroom.vroom.model;
 public class Vehicule {
 
     private int idVehicule;
-    private int idConducteur;
+    private Long idConducteur;
     private String marque;
     private String typeVehicule;
     private String matricule;
@@ -12,7 +12,7 @@ public class Vehicule {
 
     public Vehicule() {}
 
-    public Vehicule(int idVehicule, int idConducteur, String marque, String typeVehicule, String matricule, String couleur) {
+    public Vehicule(int idVehicule, Long idConducteur, String marque, String typeVehicule, String matricule, String couleur) {
         this.idVehicule = idVehicule;
         this.idConducteur = idConducteur;
         this.marque = marque;
@@ -25,7 +25,7 @@ public class Vehicule {
         return idVehicule;
     }
 
-    public int getIdConducteur() {
+    public Long getIdConducteur() {
         return idConducteur;
     }
 
@@ -49,7 +49,7 @@ public class Vehicule {
         this.idVehicule = idVehicule;
     }
 
-    public void setIdConducteur(int idConducteur) {
+    public void setIdConducteur(Long idConducteur) {
         this.idConducteur = idConducteur;
     }
 

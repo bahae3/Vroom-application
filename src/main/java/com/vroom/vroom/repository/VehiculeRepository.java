@@ -49,7 +49,7 @@ public class VehiculeRepository {
     }
 
     //voir vehicule par son id du conducteur
-    public List<Vehicule> getVehiculesByConducteur(int idConducteur) {
+    public List<Vehicule> getVehiculesByConducteur(Long idConducteur) {
         String sql="Select * from vehicule where idConducteur=?";
         return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(Vehicule.class), idConducteur);
     }
