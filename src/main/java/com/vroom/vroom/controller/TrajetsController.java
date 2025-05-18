@@ -2,77 +2,22 @@ package com.vroom.vroom.controller;
 
 import com.vroom.vroom.model.Trajets;
 import com.vroom.vroom.model.User;
-import com.vroom.vroom.service.GeolocationService;
 import com.vroom.vroom.service.TrajetsService;
 import com.vroom.vroom.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.vroom.vroom.service.*;
 
 import java.util.List;
-import java.util.Map;
-import reactor.core.publisher.Mono;
 
 
 @RestController
 @RequestMapping("/api/trajet")
 public class TrajetsController {
 
-    private final TrajetsService trajetsService;
-    private final UserService userService;
-    private final GeolocationService geolocationService;
-    private final LocationBroadcastService broadcaster;
-
-    /**
-     * Constructeur du contrôleur TrajetsController.
-     *
-     * @param trajetsService Service pour gérer les trajets.
-     * @param userService Service pour gérer les utilisateurs.
-     * @param geolocationService Service pour récupérer les informations géographiques (itinéraire, temps de trajet).
-     * @param broadcaster Service pour diffuser la position des utilisateurs.
-     */
-    public TrajetsController(TrajetsService trajetsService,
-                             UserService userService,
-                             GeolocationService geolocationService,
-                             LocationBroadcastService broadcaster) {
-        this.trajetsService = trajetsService;
-        this.userService = userService;
-        this.geolocationService = geolocationService;
-        this.broadcaster = broadcaster;
-    }
-
-    /**
-     * Récupère l'itinéraire et le temps de trajet entre deux points géographiques.
-     *
-     * @param startLat Latitude du point de départ.
-     * @param startLng Longitude du point de départ.
-     * @param endLat Latitude du point d'arrivée.
-     * @param endLng Longitude du point d'arrivée.
-     * @return Mono<String> Un objet contenant l'itinéraire et le temps estimé de trajet.
-     */
-    @GetMapping("/route")
-    public Mono<String> route(@RequestParam double startLat,
-                              @RequestParam double startLng,
-                              @RequestParam double endLat,
-                              @RequestParam double endLng) {
-        // Appel du service GeolocationService pour récupérer l'itinéraire
-        return geolocationService.getRoute(startLat, startLng, endLat, endLng);
-    }
-
-    /**
-     * Diffuse la position géographique d'un utilisateur en temps réel.
-     *
-     * @param payload Objet contenant les informations à diffuser (userId, lat, lng).
-     */
-    @PostMapping("/broadcast")
-    public void broadcastLocation(@RequestBody Map<String, Object> payload) {
-        // Extraction des informations depuis le corps de la requête
-        Long userId = Long.valueOf(payload.get("userId").toString());
-        double lat  = Double.parseDouble(payload.get("lat").toString());
-        double lng  = Double.parseDouble(payload.get("lng").toString());
-
-        // Diffusion de la position via le service LocationBroadcastService
-        broadcaster.broadcastPosition(userId, lat, lng);
-    }
+    @Autowired
+    private TrajetsService trajetsService;
+    @Autowired
+    private UserService userService;
 
 
     // partie controller pour ajouter trajet par conducteur seulement

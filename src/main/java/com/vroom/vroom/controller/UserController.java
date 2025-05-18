@@ -1,90 +1,88 @@
 package com.vroom.vroom.controller;
 
+import com.vroom.vroom.dto.LoginDto;
+import com.vroom.vroom.dto.RegisterDto;
 import com.vroom.vroom.model.User;
 import com.vroom.vroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.core.Authentication;
+import com.vroom.vroom.util.JwtUtil;
 
-import java.io.IOException;
-import java.util.List;
-
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:5173")   // your React origin
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private UserService userService;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private JwtUtil jwtUtil;
 
-    // Get hold of current logged-in user's info
-    private User getCurrentUserSession(Authentication authentication) {
-        String email = authentication.getName();
-        return userService.findUserByEmail(email);
-    }
-
-    @GetMapping
-    public List<User> getUsers() {
-        return userService.getAllUsers();
-    }
-
-    // Create account for Passager and Conducteur
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(
-            @RequestParam("firstName") String firstName,
-            @RequestParam("lastName") String lastName,
-            @RequestParam("email") String email,
-            @RequestParam("motDePasse") String motDePasse,
-            @RequestParam("numDeTele") String numDeTele,
-            @RequestParam("roleUser") String roleUser,
-            @RequestParam("photo") MultipartFile photo) throws IOException {
-        // Validate photo
-        if (photo.getSize() > 8_000_000) { // 8MB max
-            return ResponseEntity.badRequest().body("Photo too large");
+    public ResponseEntity<?> register(@RequestBody RegisterDto dto) {
+        String hashed = passwordEncoder.encode(dto.getMotDePasse());
+        User u = new User(
+                null,
+                dto.getFirstName(),
+                dto.getLastName(),
+                dto.getEmail(),
+                hashed,
+                new byte[0],
+                dto.getNumDeTele(),
+                dto.getRoleUser(),
+                0
+        );
+        if (!userService.createUser(u)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Could not create " + dto.getRoleUser()));
         }
-
-        // Hash password before storing it
-        String hashedPassword = passwordEncoder.encode(motDePasse);
-        byte[] photoBytes = photo.getBytes();
-
-        User user = new User(null, firstName, lastName, email, hashedPassword,
-                photoBytes, numDeTele, roleUser, 0);
-
-        boolean success = userService.createUser(user);
-        return success ?
-                ResponseEntity.ok(roleUser + " created successfully") :
-                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error creating " + roleUser);
+        User saved = userService.findUserByEmail(u.getEmail());
+        return ResponseEntity.ok(Map.of(
+                "idUser", saved.getIdUser(),
+                "message", dto.getRoleUser() + " created successfully"
+        ));
     }
 
-    // Login endpoint
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(
-            @RequestParam("email") String email,
-            @RequestParam("motDePasse") String motDePasse) {
-        User user = userService.loginUser(email, motDePasse);
-        if (user == null) {
-            // If credentials are invalid, return an error status and message
+    public ResponseEntity<?> login(@RequestBody LoginDto dto) {
+        User u = userService.loginUser(dto.getEmail(), dto.getMotDePasse());
+        if (u == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid email or password");
+                    .body(Map.of("error","Invalid credentials"));
         }
-        String successMessage;
-        if (user.isAdmin() == 1) {
-            // Check if the user is Admin, then redirect him to admin interface
-            successMessage = "Login successful for admin: " + user.getFirstName();
-        } else if ("passager".equals(user.getRoleUser())) {
-            // Check if user is Passager, then redirect him to his concerned interface
-            successMessage = "Login successful for passager: " + user.getFirstName();
-        } else {
-            // Check if user is Conducteur, then redirect him to his concerned interface
-            successMessage = "Login successful for conducteur: " + user.getFirstName();
+        String role = u.isAdmin()==1 ? "ADMIN" : u.getRoleUser().toUpperCase();
+        String token = jwtUtil.generateToken(u.getEmail(), role);
+        return ResponseEntity.ok(Map.of(
+                "token",     token,
+                "idUser",    u.getIdUser(),
+                "firstName", u.getFirstName(),
+                "roleUser",  u.getRoleUser()
+        ));
+    }
+
+
+// === WHO AM I? ===
+    @GetMapping("/me")
+    public ResponseEntity<?> whoAmI() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Not logged in"));
         }
-        return ResponseEntity.ok(successMessage);
+        String email = auth.getName();
+        User user = userService.findUserByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+
+    // === (optional) ADMIN: list all users ===
+    @GetMapping
+    public ResponseEntity<?> getUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 }

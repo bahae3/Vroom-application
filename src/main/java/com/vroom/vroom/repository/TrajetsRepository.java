@@ -25,7 +25,7 @@ public class TrajetsRepository {
     private final RowMapper<Trajets> trajetsRowMapper = (rs, rowNum) -> {
         Trajets trajet = new Trajets();
         trajet.setIdTrajet(rs.getInt("idTrajet"));
-        trajet.setIdConducteur(rs.getLong("idConducteur"));
+        trajet.setIdConducteur(rs.getInt("idConducteur"));
         trajet.setPointDepart(rs.getString("pointDepart"));
         trajet.setPointArrivee(rs.getString("pointArrivee"));
         trajet.setHeureDepart(rs.getTimestamp("heureDepart").toLocalDateTime());
@@ -77,7 +77,7 @@ public class TrajetsRepository {
 
 
     // delete trajet par un conducteur
-    public int DeleteTrajet(int idTrajet, Long idConducteur) {
+    public int DeleteTrajet(int idTrajet, int idConducteur) {
         String sql = "DELETE FROM trajet WHERE idTrajet=? AND idConducteur=?";
         return jdbcTemplate.update(sql, idTrajet, idConducteur);
 

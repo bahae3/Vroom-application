@@ -16,6 +16,8 @@ public class TrajetsService {
     private TrajetsRepository trajetsRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbc;
 
     // get All trajet service
     public List<Trajets> getAllTrajets() {
@@ -35,12 +37,12 @@ public class TrajetsService {
     }
 
     //delete trajet service
-    public boolean DeleteTrajet(int idTrajet, Long idConducteur) {
+    public boolean DeleteTrajet(int idTrajet, int idConducteur) {
         return  trajetsRepository.DeleteTrajet(idTrajet , idConducteur) >0;
     }
 
     // implementation pour la reservation d'un trajet par un conducteur
-    public boolean reserverTrajet(Long idUser, int idTrajet) {
+    public boolean reserverTrajet(int idUser, int idTrajet) {
         // 1. Check if trajet exists and if places are available
         String checkSql = "SELECT placesDisponibles FROM trajet WHERE idTrajet = ?";
         Integer places = jdbcTemplate.queryForObject(checkSql, Integer.class, idTrajet);
@@ -62,8 +64,11 @@ public class TrajetsService {
         return updateResult > 0;
     }
 
-
-
+    public boolean deleteTrajetAdmin(int trajetId) {
+        String sql = "DELETE FROM trajet WHERE idTrajet = ?";
+        int rows = jdbc.update(sql, trajetId);
+        return rows > 0;
+    }
 
 
 

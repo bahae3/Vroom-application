@@ -60,13 +60,13 @@ public class ConducteurController {
     public ResponseEntity<?> getAllTrajets(Authentication authentication) {
         if (!isConducteur(authentication)){ return ResponseEntity.status(403).body("Acces denied"); }
         User conducteur = userService.findUserByEmail(authentication.getName());
-       List<Trajets> trajet=trajetsService.getAllTrajets();
-       if(trajet.isEmpty()){
-           return ResponseEntity.status(404).body("la liste des trajets est vide");
-       }
-       else {
-           return ResponseEntity.ok(trajet);
-       }
+        List<Trajets> trajet=trajetsService.getAllTrajets();
+        if(trajet.isEmpty()){
+            return ResponseEntity.status(404).body("la liste des trajets est vide");
+        }
+        else {
+            return ResponseEntity.ok(trajet);
+        }
     }
 
     //voir le profile

@@ -24,7 +24,7 @@ public class NotificationRepository {
     // List all notifications of a single user by his id
     public List<Notification> getNotificationsById(long idUser) {
         String sql = "SELECT * FROM notifications WHERE idUser=?";
-        return jdbcTemplate.query(sql, notificationRowMapper, notificationRowMapper);
+        return jdbcTemplate.query(sql, notificationRowMapper, idUser);
     }
 
 

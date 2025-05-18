@@ -9,26 +9,24 @@ import java.util.List;
 
 @Service
 public class TransactionService {
+
     @Autowired
     private TransactionRepository transactionRepository;
 
-    // List all transactions in db
     public List<Transaction> getAllTransactions() {
         return transactionRepository.getAllTransactions();
     }
 
-    // Create a new transaction
     public int createTransaction(Transaction tr) {
         return transactionRepository.createTransaction(tr);
     }
 
-    // Update a transaction
     public int updateTransaction(Transaction tr) {
         return transactionRepository.updateTransaction(tr);
     }
 
-    // Delete a transaction
-    public int deleteUser(long idTransaction) {
-        return transactionRepository.deleteUser(idTransaction);
+    // Renamed from deleteUser to deleteTransaction
+    public int deleteTransaction(long idTransaction) {
+        return transactionRepository.deleteTransaction(idTransaction);
     }
 }

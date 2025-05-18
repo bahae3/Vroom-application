@@ -1,11 +1,16 @@
 package com.vroom.vroom.controller;
 
+import com.vroom.vroom.model.Transaction;
 import com.vroom.vroom.model.User;
 import com.vroom.vroom.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -17,6 +22,7 @@ public class AdminController {
     @Autowired private MessageService messageService;
     @Autowired private WalletService walletService;
     @Autowired private NotificationService notificationService;
+    @Autowired private TransactionService transactionService;
 
     private boolean isAdmin(Authentication authentication) {
         User currentUser = userService.findUserByEmail(authentication.getName());
@@ -59,13 +65,22 @@ public class AdminController {
     }
 
    // ✅ Supprimer un trajet
-    @DeleteMapping("/trajets/{id}")
-    public ResponseEntity<?> deleteTrajet(@PathVariable int idTrajet, Long idConducteur, Authentication authentication) {
-        if (!isAdmin(authentication)) return ResponseEntity.status(403).body("Access denied");
-        return trajetService.DeleteTrajet(idTrajet, idConducteur) ?
-                ResponseEntity.ok("Trajet deleted") :
-                ResponseEntity.status(404).body("Trajet not found");
-    }
+   @DeleteMapping("/trajets/{id}")
+   public ResponseEntity<?> deleteTrajet(
+           @PathVariable("id") int trajetId,
+           Authentication authentication
+   ) {
+       if (!isAdmin(authentication)) {
+           return ResponseEntity.status(403).body("Access denied");
+       }
+
+       boolean deleted = trajetService.deleteTrajetAdmin(trajetId);
+       if (deleted) {
+           return ResponseEntity.ok("Trajet deleted");
+       } else {
+           return ResponseEntity.status(404).body("Trajet not found");
+       }
+   }
 
     // ✅ Lire les messages
     @GetMapping("/messages")
@@ -91,4 +106,14 @@ public class AdminController {
         boolean sent = notificationService.sendNotification(idUser, titre, message);
         return sent ? ResponseEntity.ok("Notification sent") : ResponseEntity.status(500).body("Failed to send");
     }
+
+    @GetMapping("/transactions")
+    public ResponseEntity<?> getAllTransactions(Authentication authentication) {
+        if (!isAdmin(authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Access denied"));
+        }
+        List<Transaction> txns = transactionService.getAllTransactions();
+        return ResponseEntity.ok(txns);
+    }
+
 }
