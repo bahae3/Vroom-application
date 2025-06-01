@@ -5,6 +5,7 @@ import com.vroom.vroom.model.User;
 import com.vroom.vroom.service.TrajetsService;
 import com.vroom.vroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,6 +70,15 @@ public class TrajetsController {
     @GetMapping("/getAllTrajet")
     public List<Trajets> getAllTrajets() {
         return trajetsService.getAllTrajets();
+    }
+
+    @GetMapping("/getById/{idTrajet}")
+    public ResponseEntity<?> getTrajetById(@PathVariable long idTrajet) {
+        Trajets t = trajetsService.getTrajetById((int) idTrajet);
+        if (t == null) {
+            return ResponseEntity.status(404).body("Trajet introuvable");
+        }
+        return ResponseEntity.ok(t);
     }
 
 

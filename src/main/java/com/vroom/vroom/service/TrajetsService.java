@@ -2,6 +2,7 @@ package com.vroom.vroom.service;
 
 import com.vroom.vroom.model.Trajets;
 import com.vroom.vroom.repository.TrajetsRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -37,12 +38,12 @@ public class TrajetsService {
     }
 
     //delete trajet service
-    public boolean DeleteTrajet(int idTrajet, int idConducteur) {
+    public boolean DeleteTrajet(int idTrajet, long idConducteur) {
         return  trajetsRepository.DeleteTrajet(idTrajet , idConducteur) >0;
     }
 
     // implementation pour la reservation d'un trajet par un conducteur
-    public boolean reserverTrajet(int idUser, int idTrajet) {
+    public boolean reserverTrajet(long idUser, long idTrajet) {
         // 1. Check if trajet exists and if places are available
         String checkSql = "SELECT placesDisponibles FROM trajet WHERE idTrajet = ?";
         Integer places = jdbcTemplate.queryForObject(checkSql, Integer.class, idTrajet);
@@ -71,5 +72,18 @@ public class TrajetsService {
     }
 
 
+    public Trajets getTrajetById(int idTrajet) {
+        return trajetsRepository.getTrajetById(idTrajet);
+    }
 
+    @Transactional
+    public boolean decrementPlaceIfAvailable(int trajetId) {
+        int rowsAffected = jdbcTemplate.update(
+                "UPDATE trajet " +
+                        "SET placesDisponibles = placesDisponibles - 1 " +
+                        "WHERE idTrajet = ? AND placesDisponibles > 0",
+                trajetId
+        );
+        return rowsAffected > 0;
+    }
 }

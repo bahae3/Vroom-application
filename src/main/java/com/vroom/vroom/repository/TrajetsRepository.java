@@ -15,7 +15,9 @@ public class TrajetsRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
 
     public TrajetsRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,6 +36,8 @@ public class TrajetsRepository {
         trajet.setEtat(rs.getString("etat"));
         return trajet;
     };
+
+
 
 
     public List<Trajets> getAllTrajets() {
@@ -77,11 +81,20 @@ public class TrajetsRepository {
 
 
     // delete trajet par un conducteur
-    public int DeleteTrajet(int idTrajet, int idConducteur) {
+    public int DeleteTrajet(int idTrajet, long idConducteur) {
         String sql = "DELETE FROM trajet WHERE idTrajet=? AND idConducteur=?";
         return jdbcTemplate.update(sql, idTrajet, idConducteur);
 
 
+    }
+
+    public Trajets getTrajetById(int idTrajet) {
+        String sql = "SELECT * FROM trajet WHERE idTrajet = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{ idTrajet },
+                trajetsRowMapper
+        );
     }
 
 
